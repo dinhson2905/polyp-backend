@@ -43,7 +43,9 @@ class PredictService():
         image_tensor = self.transform(image_pil).unsqueeze(0)
         # check cuda
         device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        print("Device: ", device)
         if model_name == 'hardmseg':
+            print('Model: HarDMSEG')
             model = HarDMSEG()
             model.load_state_dict(torch.load(weights_hardmseg))
             model.to(device)
@@ -60,6 +62,7 @@ class PredictService():
                 'base64_encode': base64.b64encode(open(ln, 'rb').read()).decode('utf-8')
             }
         elif model_name == 'hardcpd':
+            print("Model: HarDCPD")
             model = HarDCPD()
             model.load_state_dict(torch.load(weights_cpd))
             model.to(device)
@@ -78,6 +81,7 @@ class PredictService():
         
         if del_image:
             os.remove(image_path)
+            print("Delete input image")
         
         return response_json
             
